@@ -1,0 +1,11 @@
+The;DT;Singular
+the;DT;Singular
+A;DT;Singular
+people;NN;Plural
+person;NN; Single
+dislike;VB;Plural
+dislikes;VBZ;Singular
+like;VB;Plural
+likes;VBZ;Singular
+green;JJ;Singular
+dog;NN;Singular
