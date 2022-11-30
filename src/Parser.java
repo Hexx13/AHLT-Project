@@ -19,6 +19,7 @@ public class Parser {
      * @throws IOException due to use of BufferedReader and FileReader
      */
     public Parser() throws IOException {
+        //Initialize Lists
         lexicon = new ArrayList<Word>();
         rules = new ArrayList<Rule>();
         partsOfSpeech = new ArrayList<POS>();
@@ -32,14 +33,20 @@ public class Parser {
      * @throws IOException due to use of BufferedReader and FileReader
      */
     public void populateLexicon() throws IOException {
+        //reader for lexicon.txt
         BufferedReader br = new BufferedReader(new FileReader("lexicon.txt"));
         String line = "";
+        //loop until end of file
         while ((line = br.readLine()) != null) {
+            //tokenize the line
             StringTokenizer st = new StringTokenizer(line, ";");
+            //create a new word object
             Word word = new Word();
+            //Populate word object with values from lexicon.txt
             word.setWord(st.nextToken());
             word.setPos(st.nextToken());
             word.setAmnt(st.nextToken());
+            //add word to lexicon
             lexicon.add(word);
         }
     }
@@ -99,8 +106,9 @@ public class Parser {
         }
        determineRule();
     }
-
+    //TODO Refactor this to work on a larger scale
     void determineRule() {
+        //loop for each rule, if the parts of speech from the input match a certain rule then print the rule
         for (Rule rule : rules) {
             if(partsOfSpeech.size() == rule.getPosList().size()){
                 for (int i = 0; i < partsOfSpeech.size(); i++) {
