@@ -1,4 +1,14 @@
 public class Word {
+
+
+
+    public Word() {
+    }
+    public Word(String word, String amnt, POS pos) {
+        this.word = word;
+        this.amnt = amnt;
+        this.pos = pos;
+    }
     public POS getPos() {
         return pos;
     }
