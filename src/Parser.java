@@ -117,21 +117,21 @@ public class Parser {
     /**
      * @deprecated
      */
-    void populatePOS() {
-        try {
-            // Buffered reader, reads file, tokenizes it, and adds it to the list
-            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
-            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
-            while (st.hasMoreTokens()) {
-                partsOfSpeech.add(new POS(st.nextToken()));
-            }
-
-        } catch (IOException e){
-            System.out.println("Error: " + e);
-        }
-    }
-    public List<POS> getPartsOfSpeech() {
-        return partsOfSpeech;
-    }
+//    void populatePOS() {
+//        try {
+//            // Buffered reader, reads file, tokenizes it, and adds it to the list
+//            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
+//            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
+//            while (st.hasMoreTokens()) {
+//                partsOfSpeech.add(new POS(st.nextToken()));
+//            }
+//
+//        } catch (IOException e){
+//            System.out.println("Error: " + e);
+//        }
+//    }
+//    public List<POS> getPartsOfSpeech() {
+//        return partsOfSpeech;
+//    }
 }
 
