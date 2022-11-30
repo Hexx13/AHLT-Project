@@ -23,7 +23,8 @@ public class Parser {
         lexicon = new ArrayList<Word>();
         rules = new ArrayList<Rule>();
         partsOfSpeech = new ArrayList<POS>();
-
+        inputWords = new ArrayList<Word>();
+        //Populate Lists
         populateRule();
         populateLexicon();
     }
