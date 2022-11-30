@@ -89,7 +89,7 @@ public class Parser {
     }
 
 
-    void parse(String sentence) {
+    void parseInput(String sentence) {
         //clean sentence of any other possible characters apart from letters and spaces
         sentence = sentence.replaceAll("[^a-z A-Z]", "");
         //tokenize sentence
