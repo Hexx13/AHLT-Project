@@ -13,6 +13,7 @@ public class Parser {
     private List<Rule> rules;
     private List<POS> partsOfSpeech;
 
+    private List<Word> inputWords;
 
     /**
      * Constructor assigns objects for lexicon, rules and populates them
@@ -45,7 +46,7 @@ public class Parser {
             Word word = new Word();
             //Populate word object with values from lexicon.txt
             word.setWord(st.nextToken());
-            word.setPos(st.nextToken());
+            word.setPos(new POS(st.nextToken()));
             word.setAmnt(st.nextToken());
             //add word to lexicon
             lexicon.add(word);
@@ -97,11 +98,15 @@ public class Parser {
         StringTokenizer st = new StringTokenizer(sentence, " ");
 
         while (st.hasMoreTokens()) {
-            String word = st.nextToken();
+            Word word = new Word();
+            String wordString = st.nextToken();
             //check if word is in lexicon
             for (Word w : lexicon) {
-                if (w.getWord().equals(word)) {
-                    partsOfSpeech.add(w.getPos());
+                if (w.getWord().equals(wordString)) {
+                    word.setPos(w.getPos());
+                    word.setWord(wordString);
+                    System.out.println(word.toString());
+                    inputWords.add(word);
                 }
             }
         }
@@ -111,9 +116,11 @@ public class Parser {
     void determineRule() {
         //loop for each rule, if the parts of speech from the input match a certain rule then print the rule
         for (Rule rule : rules) {
-            if(partsOfSpeech.size() == rule.getPosList().size()){
-                for (int i = 0; i < partsOfSpeech.size(); i++) {
-                    if(!(partsOfSpeech.get(i).getPosString().equals(rule.getPosList().get(i).getPosString()))){
+            if(inputWords.size() == rule.getPosList().size()){
+                //loop for each part of speech in input
+                for (int i = 0; i < inputWords.size(); i++) {
+                    //if the parts of speech don't match the rule then break out of the loop
+                    if(!(inputWords.get(i).getPos().getPosString().equals(rule.getPosList().get(i).getPosString()))){
                         break;
                     }
                 }

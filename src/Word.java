@@ -3,8 +3,8 @@ public class Word {
         return pos;
     }
 
-    public void setPos(String pos) {
-        this.pos = new POS(pos);
+    public void setPos(POS pos) {
+        this.pos = pos;
     }
 
     public String getWord() {
