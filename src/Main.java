@@ -1,12 +1,14 @@
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
             Parser parser = new Parser();
-            parser.parseInput("A green dog likes people");
+            //TODO add conjunctive rules
+            parser.parseInput("The green dog likes people and green people like dog");
 
 
 //        ParserTree tree = new ParserTree();
