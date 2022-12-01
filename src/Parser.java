@@ -95,7 +95,6 @@ public class Parser {
         sentence = sentence.replaceAll("[^a-z A-Z]", "");
         //tokenize sentence
         StringTokenizer st = new StringTokenizer(sentence, " ");
-
         while (st.hasMoreTokens()) {
             Word word = new Word();
             String wordString = st.nextToken();
@@ -130,33 +129,42 @@ public class Parser {
     }
 
 
-
-
-    /**Takes in a list of POS and compares them to the rules
-     * @param list takes in a list of POS objects to compare against existing rule POS structures
-     * @return a rule if the rule is found, null if not
+    /**This method determines the match of the POS parameter list based on the global POS rule list.
+     * It is assumed that the rules are in order of least complex to most complex in respect of amounts of POS
+     * @param list is a list of POS objects
+     * @return a Rule object if the rule is found otherwise returns Null
      */
     private Rule compareRule(List<POS> list){
+        //boolean to determine if the rule matches
         boolean match = false;
+        //declare Rule object to be returned, assigned null to return if no match is found
         Rule returnRule = null;
-//        System.out.println();
-//        System.out.println();
-//        System.out.println(rules.size());
+        //loop through all rules
         for(Rule rule: rules){
+            //assign list of rules to new list for code readability
             List<POS> rulePOSList = rule.getPosList();
+
+            //check if the size of the rule is the same as the list to reduce processing time
             if(list.size() == rulePOSList.size()){
-                //System.out.println("New Rule test for: " + rule.getRule());
+
+                //loop through all POS passed as parameter
                 for (int i = 0; i < list.size(); i++) {
                     //System.out.println("  "+ list.get(i).getPosString());
+
+                    //Assign current POS and Rule POS to new variables for code readability
                     String wordPOS = list.get(i).getPosString();
                     String rulePOS = rulePOSList.get(i).getPosString();
+
+                    //Determine if given POS matches the rule
                     if(!(wordPOS.equals(rulePOS))){
-                        //System.out.println("Rule failed");
+
+                        //If the POS does not match the rule, set match to false and go to next rule
                         match = false;
                         break;
                     }
                     else match = true;
                 }
+                //if match is true set current rule to be returned, but also allowing more complex rule down the line to replace it
                 if(match) returnRule = rule;
             }
         }
