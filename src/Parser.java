@@ -112,71 +112,88 @@ public class Parser {
        determineRule();
     }
     void determineRule() {
-        List<Word> list = new ArrayList<Word>();
+        List<POS> list = new ArrayList<POS>();
         for(int i = 0; i < inputWords.size(); i++){
-            //Debug
-            String rulesString = "";
-
-            //End Debug
-            //System.out.println(i);
-
-            list.add(inputWords.get(i));
-
-
-
-            Rule rule = compareRule(list);
-
-            if(rule != null){
-                System.out.println();
-                for (Word w : list) {
-                    System.out.println(w.getWord() + "  "+ w.getPos().getPosString());
-                }
-                list.clear();
-                System.out.println(rule.getRule());
+            //System.out.println("New itteration");
+            list.add(inputWords.get(i).getPos());
+            System.out.println("\nTrying list of pos: ");
+            for (POS w : list) {
+                System.out.println(" Rule:  "+ w.getPosString());
             }
-
-
-//            for (Rule rule: rules) {
-//                if(list.size() == rule.getPosList().size()){
-//                    for (int j = 0; j < list.size(); j++) {
-//                        //if the parts of speech don't match the rule then break out of the loop
-//                        if(!(list.get(j).getPos().getPosString().equals(rule.getPosList().get(j).getPosString()))){
-//                            System.out.println("not a rule");
-//                            //break;
-//                        } else {
-//                            for (Word word:list) {
-//                                System.out.println(word.toString());
-//                            }
-//                            list.clear();
-//                            rulesString = rulesString + rule.getRule() + " ";
-//                        }
-//                    }
-//                }
-//            }
-//            System.out.println(rulesString);
+            Rule rule = compareRule(list);
+            if(rule != null){
+//                System.out.println();
+                list.clear();
+                System.out.println("Found rule: "+rule.getRule());
+            } else System.out.println("No rule found");
         }
-//        //loop for each rule, if the parts of speech from the input match a certain rule then print the rule
-//        for (Rule rule : rules) {
-//
-//
-//
-//            if(inputWords.size() == rule.getPosList().size()){
-//                //loop for each part of speech in input
-//                for (int i = 0; i < inputWords.size(); i++) {
-//                    //if the parts of speech don't match the rule then break out of the loop
-//                    if(!(inputWords.get(i).getPos().getPosString().equals(rule.getPosList().get(i).getPosString()))){
-//                        break;
-//                    }
-//                }
-//                System.out.println(rule.getRule());
-//            }
-//        }
     }
-    private Rule compareRule(List<Word> list){
+
+
+
+
+    /**Takes in a list of POS and compares them to the rules
+     * @param list takes in a list of POS objects to compare against existing rule POS structures
+     * @return a rule if the rule is found, null if not
+     */
+    private Rule compareRule(List<POS> list){
+        boolean match = false;
+        Rule returnRule = null;
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(rules.size());
+        for(Rule rule: rules){
+            List<POS> rulePOSList = rule.getPosList();
+            if(list.size() == rulePOSList.size()){
+                //System.out.println("New Rule test for: " + rule.getRule());
+                for (int i = 0; i < list.size(); i++) {
+                    //System.out.println("  "+ list.get(i).getPosString());
+                    String wordPOS = list.get(i).getPosString();
+                    String rulePOS = rulePOSList.get(i).getPosString();
+                    if(!(wordPOS.equals(rulePOS))){
+                        //System.out.println("Rule failed");
+                        match = false;
+                        break;
+                    }
+                    else match = true;
+                }
+                if(match) returnRule = rule;
+            }
+        }
+        return returnRule;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @deprecated
+     */
+
+    /**Takes in a list of words and compares them to the rules
+     * @param list takes in a list of words with POS objects to compare against existing rule POS structures
+     * @return a rule if the rule is found, null if not
+     */
+    private Rule compareRule3(List<Word> list){
         boolean match = false;
         Rule returner = null;
         //for each rule in the rules list
         for (Rule rule: rules) {
+
             //if the size of the rule is the same as the size of the list
             if(list.size() == rule.getPosList().size()){
                 //loop for each pos in the list
@@ -201,24 +218,42 @@ public class Parser {
         else return null;
     }
 
-    /**
-     * @deprecated
-     */
-//    void populatePOS() {
-//        try {
-//            // Buffered reader, reads file, tokenizes it, and adds it to the list
-//            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
-//            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
-//            while (st.hasMoreTokens()) {
-//                partsOfSpeech.add(new POS(st.nextToken()));
+    public List<POS> getPartsOfSpeech() {
+        return partsOfSpeech;
+    }
+//            for (Rule rule: rules) {
+//                if(list.size() == rule.getPosList().size()){
+//                    for (int j = 0; j < list.size(); j++) {
+//                        //if the parts of speech don't match the rule then break out of the loop
+//                        if(!(list.get(j).getPos().getPosString().equals(rule.getPosList().get(j).getPosString()))){
+//                            System.out.println("not a rule");
+//                            //break;
+//                        } else {
+//                            for (Word word:list) {
+//                                System.out.println(word.toString());
+//                            }
+//                            list.clear();
+//                            rulesString = rulesString + rule.getRule() + " ";
+//                        }
+//                    }
+//                }
 //            }
+//            System.out.println(rulesString);
+//        //loop for each rule, if the parts of speech from the input match a certain rule then print the rule
+//        for (Rule rule : rules) {
 //
-//        } catch (IOException e){
-//            System.out.println("Error: " + e);
+//
+//
+//            if(inputWords.size() == rule.getPosList().size()){
+//                //loop for each part of speech in input
+//                for (int i = 0; i < inputWords.size(); i++) {
+//                    //if the parts of speech don't match the rule then break out of the loop
+//                    if(!(inputWords.get(i).getPos().getPosString().equals(rule.getPosList().get(i).getPosString()))){
+//                        break;
+//                    }
+//                }
+//                System.out.println(rule.getRule());
+//            }
 //        }
-//    }
-//    public List<POS> getPartsOfSpeech() {
-//        return partsOfSpeech;
-//    }
 }
 
