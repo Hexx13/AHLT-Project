@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
             Parser parser = new Parser();
             //TODO add conjunctive rules
-            parser.parseInput("The green dog likes people and green people like dog");
+            parser.parse("The green dog likes people and green people like dog");
 
         new ParserGUI("ParserGui");
 
