@@ -13,7 +13,22 @@ public class Parser {
     private List<Rule> rules;
     private List<POS> partsOfSpeech;
 
-    private List<Word> inputWords;
+    //private List<Word> inputWords;
+
+    void populatePOS() {
+        try {
+            // Buffered reader, reads file, tokenizes it, and adds it to the list
+            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
+            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
+            while (st.hasMoreTokens()) {
+                partsOfSpeech.add(new POS(st.nextToken()));
+            }
+
+        } catch (IOException e){
+            System.out.println("Error: " + e);
+        }
+    }
+
 
     /**
      * Constructor assigns objects for lexicon, rules and populates them
@@ -24,10 +39,12 @@ public class Parser {
         lexicon = new ArrayList<Word>();
         rules = new ArrayList<Rule>();
         partsOfSpeech = new ArrayList<POS>();
-        inputWords = new ArrayList<Word>();
+        //inputWords = new ArrayList<Word>();
+
         //Populate Lists
         populateRule();
         populateLexicon();
+
     }
 
     /**
@@ -89,12 +106,45 @@ public class Parser {
             rules.add(rule);
         }
     }
+    void parse(String input) {
+        List<Word> parsedInput = parseInput(input);
+        List<ParserTreeNode> trees = new ArrayList<ParserTreeNode>();
 
-    void parseInput(String sentence) {
+        //create all the words as leafs
+        for (Word word : parsedInput) {
+            trees.add(new ParserTreeNode(true, word.getPos(), word.getWord()));
+        }
+
+
+        Rule rule;
+        List<POS> list = new ArrayList<POS>();
+        List<Rule> phrases = new ArrayList<Rule>();
+        for(int i = 0; i < parsedInput.size(); i++){
+            //System.out.println("New itteration");
+            list.add(parsedInput.get(i).getPos());
+
+            //Debug statements
+            System.out.println("\nTrying list of pos: ");
+            for (POS w : list) {
+                System.out.println(" Rule:  "+ w.getPosString());
+            }
+            rule = compareRule(list);
+
+            if(rule != null){
+
+                list.clear();
+                System.out.println("Found rule: "+rule.getRule());
+            } else System.out.println("No rule found");
+        }
+        //determineRule(parsedInput);
+    }
+    List<Word> parseInput(String sentence) {
+        List<Word> inputWords = new ArrayList<Word>();
         //clean sentence of any other possible characters apart from letters and spaces
         sentence = sentence.replaceAll("[^a-z A-Z]", "");
         //tokenize sentence
         StringTokenizer st = new StringTokenizer(sentence, " ");
+
         while (st.hasMoreTokens()) {
             Word word = new Word();
             String wordString = st.nextToken();
@@ -108,24 +158,11 @@ public class Parser {
                 }
             }
         }
-       determineRule();
+        return inputWords;
     }
-    void determineRule() {
-        List<POS> list = new ArrayList<POS>();
-        for(int i = 0; i < inputWords.size(); i++){
-            //System.out.println("New itteration");
-            list.add(inputWords.get(i).getPos());
-            System.out.println("\nTrying list of pos: ");
-            for (POS w : list) {
-                System.out.println(" Rule:  "+ w.getPosString());
-            }
-            Rule rule = compareRule(list);
-            if(rule != null){
-//                System.out.println();
-                list.clear();
-                System.out.println("Found rule: "+rule.getRule());
-            } else System.out.println("No rule found");
-        }
+
+    void determineRule(List<Word> inputWords) {
+
     }
 
 
