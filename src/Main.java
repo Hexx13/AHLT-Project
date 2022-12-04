@@ -8,8 +8,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
             Parser parser = new Parser();
             //TODO add conjunctive rules
-            parser.parse("The green dog likes people and green people like dog");
-
+        //parser.parse("Oooga booga, hunt animal, breed woman");
+        boolean result = parser.parse("The green dog likes people ");
+        if(!result) System.out.println("Invalid grammar or unknown word");
         //new ParserGUI("ParserGui");
 
 //        ParserTree tree = new ParserTree();

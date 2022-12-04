@@ -22,3 +22,5 @@ NP,VB
 VP
 DT,JJ,NN
 NP
+VP
+S

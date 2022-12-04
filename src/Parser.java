@@ -106,37 +106,52 @@ public class Parser {
     }
 
     //takes in the input and adds stuff to "tree"
-    void parse(String input) {
-        List<Word> parsedInput = parseInput(input);
+    boolean parse(String input) {
+
+        List<ParserTreeNode> parsedInput = parseInput(input);
+        if(parsedInput == null){return false;}
         List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
 
         List<ParserTreeNode> leafs = new ArrayList<ParserTreeNode>();
 
-
-        //create all the words as leafs
-        for (Word word : parsedInput) {
-            leafs.add(new ParserTreeNode(true, word.getPos().getPosString(), word.getWord()));
+        for (ParserTreeNode treer : determineRule(parsedInput)){
+            System.out.println(treer.getPos().getPosString());
+            for (ParserTreeNode child : treer.children){
+                System.out.print(child.getPos().getPosString() + " ");
+            }
+            System.out.println("\n");
         }
-        tree.add(leafs);
 
-        tree.add(determineRule(leafs));
-
-        tree.add(determineRule(tree.get(1)));
-
-        tree.add(determineRule(tree.get(2)));
+//        tree.add(leafs);
+//
+//        tree.add(determineRule(leafs));
+//
+//
+//        tree.add(determineRule(tree.get(1)));
+//        tree.add(determineRule(tree.get(2)));
+//        tree.add(determineRule(tree.get(3)));
+//
+//        for(ParserTreeNode node : tree.get(3)){
+//            System.out.println(node.getTag());
+//        }
+        return true;
     }
 
     //clean input and assigns POS to words
-    List<Word> parseInput(String sentence) {
+    List<ParserTreeNode> parseInput(String sentence) {
         List<Word> inputWords = new ArrayList<Word>();
+        List<String> compare = new ArrayList<String>();
+        List<ParserTreeNode> tree = new ArrayList<ParserTreeNode>();
         //clean sentence of any other possible characters apart from letters and spaces
         sentence = sentence.replaceAll("[^a-z A-Z]", "");
         //tokenize sentence
         StringTokenizer st = new StringTokenizer(sentence, " ");
 
         while (st.hasMoreTokens()) {
+
             Word word = new Word();
             String wordString = st.nextToken();
+            compare.add(wordString);
             //check if word is in lexicon
             for (Word w : lexicon) {
                 if (w.getWord().equals(wordString)) {
@@ -144,10 +159,16 @@ public class Parser {
                     word.setWord(wordString);
                     //System.out.println(word.toString());
                     inputWords.add(word);
+                    tree.add(new ParserTreeNode(word));
                 }
             }
         }
-        return inputWords;
+        System.out.println(compare.size() + " " + inputWords.size());
+        if (compare.size() == inputWords.size()){return tree;}
+        else {
+            return null;
+        }
+        //return inputWords;
     }
 
     //reccursive search for rules for an inputted list
@@ -155,31 +176,37 @@ public class Parser {
 
         //when a rule is found assign leafs to the rule node
         Rule rule;
-        List<POS> list = new ArrayList<POS>();
-        List<ParserTreeNode> level = new ArrayList<ParserTreeNode>();
+        ParserTreeNode phrase = null;
+        List<ParserTreeNode> parseList = new ArrayList<ParserTreeNode>();
 
+        List<ParserTreeNode> parsed = new ArrayList<ParserTreeNode>();
 
         for(int i = 0; i < children.size(); i++){
-
-            list.add(new POS(children.get(i).getTag()));
+            List<ParserTreeNode> parsedChildren = new ArrayList<ParserTreeNode>();
+            parseList.add(children.get(i));
 
             //Debug statements
-            rule = compareRule(list);
+            rule = compareRule(parseList);
 
             System.out.println("New itteration");
-            System.out.println("Trying list of pos: ");
-            for (POS w : list) {
-                System.out.println(" Rule:  "+ w.getPosString());
+            System.out.println("Trying parseList of pos: ");
+            for (ParserTreeNode node : parseList) {
+                System.out.println(" Rule:  "+ node.getPos().getPosString());
             }
             if(rule != null){
+                for (ParserTreeNode node : parseList) {
+                    parsedChildren.add(node);
+                }
+
+                //phrase = ;
+                parsed.add(new ParserTreeNode(new POS(rule.getRule()), parsedChildren));
                 System.out.println("Found rule: "+rule.getRule());
-                System.out.println();
-                list.clear();
-                level.add(new ParserTreeNode(rule.getRule()));
+                parseList.clear();
+
             } //else System.out.println("No rule found");
         }
 
-        return level;
+        return parsed;
     }
 
 
@@ -188,7 +215,7 @@ public class Parser {
      * @param list is a list of POS objects
      * @return a Rule object if the rule is found otherwise returns Null
      */
-    private Rule compareRule(List<POS> list){
+    private Rule compareRule(List<ParserTreeNode> list){
         //boolean to determine if the rule matches
         boolean match = false;
         //declare Rule object to be returned, assigned null to return if no match is found
@@ -206,7 +233,7 @@ public class Parser {
                     //System.out.println("  "+ list.get(i).getPosString());
 
                     //Assign current POS and Rule POS to new variables for code readability
-                    String wordPOS = list.get(i).getPosString();
+                    String wordPOS = list.get(i).getPos().getPosString();
                     String rulePOS = rulePOSList.get(i).getPosString();
 
                     //Determine if given POS matches the rule
@@ -229,39 +256,39 @@ public class Parser {
      * @deprecated
      */
 
-    /**Takes in a list of words and compares them to the rules
-     * @param list takes in a list of words with POS objects to compare against existing rule POS structures
-     * @return a rule if the rule is found, null if not
-     */
-    private Rule compareRule3(List<Word> list){
-        boolean match = false;
-        Rule returner = null;
-        //for each rule in the rules list
-        for (Rule rule: rules) {
-
-            //if the size of the rule is the same as the size of the list
-            if(list.size() == rule.getPosList().size()){
-                //loop for each pos in the list
-                for (int i = 0; i < list.size(); i++) {
-                    String wordPOS = list.get(i).getPos().getPosString();
-                    String rulePOS = rule.getPosList().get(i).getPosString();
-                    //if pos in the list is not the same as the rule pos then break
-                    if(!(wordPOS.equals(rulePOS))){
-                        match = false;
-                        break;
-                    }
-                    //if pos in the list is the same as the rule pos then set match to true
-                    else match = true;
-                }
-                //if the match is successful then set the rule to returner
-                returner = rule;
-                if (match) return returner;
-            }
-        }
-        //if match is successful return the rule
-        if (match) return returner;
-        else return null;
-    }
+//    /**Takes in a list of words and compares them to the rules
+//     * @param list takes in a list of words with POS objects to compare against existing rule POS structures
+//     * @return a rule if the rule is found, null if not
+//     */
+//    private Rule compareRule3(List<Word> list){
+//        boolean match = false;
+//        Rule returner = null;
+//        //for each rule in the rules list
+//        for (Rule rule: rules) {
+//
+//            //if the size of the rule is the same as the size of the list
+//            if(list.size() == rule.getPosList().size()){
+//                //loop for each pos in the list
+//                for (int i = 0; i < list.size(); i++) {
+//                    String wordPOS = list.get(i).getPos().getPosString();
+//                    String rulePOS = rule.getPosList().get(i).getPosString();
+//                    //if pos in the list is not the same as the rule pos then break
+//                    if(!(wordPOS.equals(rulePOS))){
+//                        match = false;
+//                        break;
+//                    }
+//                    //if pos in the list is the same as the rule pos then set match to true
+//                    else match = true;
+//                }
+//                //if the match is successful then set the rule to returner
+//                returner = rule;
+//                if (match) return returner;
+//            }
+//        }
+//        //if match is successful return the rule
+//        if (match) return returner;
+//        else return null;
+//    }
 
 
 //            for (Rule rule: rules) {

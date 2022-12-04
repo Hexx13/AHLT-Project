@@ -1,39 +1,30 @@
-import org.w3c.dom.Node;
+import java.util.List;
 
-import java.util.*;
-
-public class ParserTreeNode {
+/**
+ *
+ */
+public class TreeNode {
 
     Word word;
-
-    public POS getPos() {
-        return pos;
-    }
-
-    public void setPos(POS pos) {
-        this.pos = pos;
-    }
-
-    private POS pos;
-    List<ParserTreeNode> children;
-    ParserTreeNode parent;
+    POS pos;
+    List<TreeNode> children;
+    TreeNode parent;
 
     //leaf
-    public ParserTreeNode(Word word){
+    public TreeNode(Word word){
         this.word = word;
         this.pos = word.getPos();
     }
     //not leaf
-    ParserTreeNode(POS pos, List<ParserTreeNode> children){
+    TreeNode(POS pos, List<TreeNode> children, TreeNode parent){
         this.pos = pos;
         this.children = children;
+        this.parent = parent;
     }
 
     public boolean isLeaf(){
         return children != null;
     }
-
-
 //    public boolean addChild(Word n) {
 //        return childrenList.add(n);
 //        //return children.add(n);
