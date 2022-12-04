@@ -11,6 +11,6 @@ public class POS {
 
     @Override
     public String toString() {
-        return pos;
+        return " "+pos+" ";
     }
 }

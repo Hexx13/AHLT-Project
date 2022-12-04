@@ -114,22 +114,16 @@ public class Parser {
 
     //takes in the input and adds stuff to "tree"
     boolean parse(String input) {
-
-        List<ParserTreeNode> parsedInput = parseInput(input);
-        if(parsedInput == null){return false;}
-        //List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
-
-        //List<ParserTreeNode> leafs = new ArrayList<ParserTreeNode>();
+        //parse input and store it in
+        List<ParserTreeNode> tree = parseInput(input);
+        if(tree == null){return false;}
 
 
-
-        while (!"S".equals(parsedInput.get(0).getPos().getPosString())){
-            //System.out.println(parsedInput.get(0).getPos().getPosString() + "\n\n\n");
-            parsedInput = determineRule(parsedInput);
+        while (!"S".equals(tree.get(0).getPos().getPosString())){
+            tree = determineRule(tree);
         }
 
-
-        System.out.println(parsedInput.get(0).toString().replaceAll("[^a-z A-Z \\] \\[]", ""));
+        System.out.println(tree.get(0).toString().replaceAll("[^a-z A-Z \\] \\[]", ""));
 
 
         return true;

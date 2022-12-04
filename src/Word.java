@@ -39,7 +39,7 @@ public class Word {
     @Override
     public String toString() {
         return
-                 pos.getPosString() +
-                "[" + word +"]";
+                 " "+ pos.getPosString() +
+                " [ " + word +" ] ";
     }
 }
