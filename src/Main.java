@@ -10,7 +10,7 @@ public class Main {
             //TODO add conjunctive rules
             parser.parse("The green dog likes people and green people like dog");
 
-        new ParserGUI("ParserGui");
+        //new ParserGUI("ParserGui");
 
 //        ParserTree tree = new ParserTree();
 //        tree.addChild( new Word("A", "1", new POS("DT")));

@@ -2,19 +2,23 @@ import java.util.*;
 
 public class ParserTreeNode {
 
-    private POS pos;
+    public String getTag() {
+        return tag;
+    }
+
+    private String tag;
     private ParserTreeNode parent;
     private List<ParserTreeNode> children;
     private Boolean isLeaf;
     private String word;
-    public ParserTreeNode(POS pos) {
-        this.pos = pos;
+    public ParserTreeNode(String tag) {
+        this.tag = tag;
         this.children = new ArrayList<>();
         this.isLeaf = false;
     }
-    public ParserTreeNode(Boolean isLeaf, POS pos, String word) {
+    public ParserTreeNode(Boolean isLeaf, String tag, String word) {
         this.word = word;
-        this.pos = pos;
+        this.tag = tag;
         this.children = new ArrayList<>();
         this.isLeaf = isLeaf;
     }

@@ -108,36 +108,45 @@ public class Parser {
     }
     void parse(String input) {
         List<Word> parsedInput = parseInput(input);
-        List<ParserTreeNode> trees = new ArrayList<ParserTreeNode>();
+        List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
+
+        List<ParserTreeNode> leafs = new ArrayList<ParserTreeNode>();
+
 
         //create all the words as leafs
         for (Word word : parsedInput) {
-            trees.add(new ParserTreeNode(true, word.getPos(), word.getWord()));
+            leafs.add(new ParserTreeNode(true, word.getPos().getPosString(), word.getWord()));
         }
+        tree.add(leafs);
 
+        tree.add(determineRule(leafs));
 
-        Rule rule;
-        List<POS> list = new ArrayList<POS>();
-        List<Rule> phrases = new ArrayList<Rule>();
-        for(int i = 0; i < parsedInput.size(); i++){
-            //System.out.println("New itteration");
-            list.add(parsedInput.get(i).getPos());
+        tree.add(determineRule(tree.get(1)));
 
-            //Debug statements
-            System.out.println("\nTrying list of pos: ");
-            for (POS w : list) {
-                System.out.println(" Rule:  "+ w.getPosString());
-            }
-            rule = compareRule(list);
-
-            if(rule != null){
-
-                list.clear();
-                System.out.println("Found rule: "+rule.getRule());
-            } else System.out.println("No rule found");
-        }
-        //determineRule(parsedInput);
+        tree.add(determineRule(tree.get(2)));
+//        int i = 0;
+//        while (true){
+//            System.out.println(tree.get(tree.size()-1).size());
+//            for(ParserTreeNode node : tree.get(i)){
+//                System.out.println(node.getTag());
+//            }
+//            if(tree.get(tree.size()-1).size() <= 1){
+//                break;
+//            }
+//            tree.add(determineRule(tree.get(i)));
+//
+//            i++;
+//        }
+//        for(List<ParserTreeNode> list : tree){
+//            System.out.println(tree.size());
+//            if(tree.size() <= 1){
+//                break;
+//            }
+//            tree.add(determineRule(list));
+//
+//        }
     }
+
     List<Word> parseInput(String sentence) {
         List<Word> inputWords = new ArrayList<Word>();
         //clean sentence of any other possible characters apart from letters and spaces
@@ -161,8 +170,37 @@ public class Parser {
         return inputWords;
     }
 
-    void determineRule(List<Word> inputWords) {
+    List<ParserTreeNode> determineRule(List<ParserTreeNode> children) {
 
+        //when a rule is found assign leafs to the rule node
+        Rule rule;
+        List<POS> list = new ArrayList<POS>();
+        List<ParserTreeNode> level = new ArrayList<ParserTreeNode>();
+
+
+        for(int i = 0; i < children.size(); i++){
+
+            list.add(new POS(children.get(i).getTag()));
+
+            //Debug statements
+
+            rule = compareRule(list);
+
+            System.out.println("New itteration");
+            System.out.println("Trying list of pos: ");
+            for (POS w : list) {
+                System.out.println(" Rule:  "+ w.getPosString());
+            }
+            if(rule != null){
+
+                System.out.println("Found rule: "+rule.getRule());
+                System.out.println();
+                list.clear();
+                level.add(new ParserTreeNode(rule.getRule()));
+            } //else System.out.println("No rule found");
+        }
+
+        return level;
     }
 
 
@@ -207,23 +245,6 @@ public class Parser {
         }
         return returnRule;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * @deprecated
