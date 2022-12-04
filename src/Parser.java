@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
+/*TODO
+ * Tree Visualization
+ * GUI
+ * Document code
+ * Write Paper
+ */
 /**
  *
  */
@@ -110,30 +117,21 @@ public class Parser {
 
         List<ParserTreeNode> parsedInput = parseInput(input);
         if(parsedInput == null){return false;}
-        List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
+        //List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
 
-        List<ParserTreeNode> leafs = new ArrayList<ParserTreeNode>();
+        //List<ParserTreeNode> leafs = new ArrayList<ParserTreeNode>();
 
-        for (ParserTreeNode treer : determineRule(parsedInput)){
-            System.out.println(treer.getPos().getPosString());
-            for (ParserTreeNode child : treer.children){
-                System.out.print(child.getPos().getPosString() + " ");
-            }
-            System.out.println("\n");
+
+
+        while (!"S".equals(parsedInput.get(0).getPos().getPosString())){
+            //System.out.println(parsedInput.get(0).getPos().getPosString() + "\n\n\n");
+            parsedInput = determineRule(parsedInput);
         }
 
-//        tree.add(leafs);
-//
-//        tree.add(determineRule(leafs));
-//
-//
-//        tree.add(determineRule(tree.get(1)));
-//        tree.add(determineRule(tree.get(2)));
-//        tree.add(determineRule(tree.get(3)));
-//
-//        for(ParserTreeNode node : tree.get(3)){
-//            System.out.println(node.getTag());
-//        }
+
+        System.out.println(parsedInput.get(0).toString().replaceAll("[^a-z A-Z \\] \\[]", ""));
+
+
         return true;
     }
 
@@ -163,7 +161,7 @@ public class Parser {
                 }
             }
         }
-        System.out.println(compare.size() + " " + inputWords.size());
+        //System.out.println(compare.size() + " " + inputWords.size());
         if (compare.size() == inputWords.size()){return tree;}
         else {
             return null;
@@ -187,25 +185,21 @@ public class Parser {
 
             //Debug statements
             rule = compareRule(parseList);
-
-            System.out.println("New itteration");
-            System.out.println("Trying parseList of pos: ");
-            for (ParserTreeNode node : parseList) {
-                System.out.println(" Rule:  "+ node.getPos().getPosString());
-            }
+//            System.out.println("New itteration");
+//            System.out.println("Trying parseList of pos: ");
+//            for (ParserTreeNode node : parseList) {
+//                System.out.println(" Rule:  "+ node.getPos().getPosString());
+//            }
             if(rule != null){
                 for (ParserTreeNode node : parseList) {
                     parsedChildren.add(node);
                 }
-
-                //phrase = ;
                 parsed.add(new ParserTreeNode(new POS(rule.getRule()), parsedChildren));
                 System.out.println("Found rule: "+rule.getRule());
                 parseList.clear();
 
-            } //else System.out.println("No rule found");
+            }
         }
-
         return parsed;
     }
 

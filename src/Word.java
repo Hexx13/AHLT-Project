@@ -38,10 +38,8 @@ public class Word {
     private POS pos;
     @Override
     public String toString() {
-        return "Word{" +
-                "type='" + pos.getPosString() + '\'' +
-                ", word='" + word + '\'' +
-                ", amnt='" + amnt + '\'' +
-                '}';
+        return
+                 pos.getPosString() +
+                "[" + word +"]";
     }
 }

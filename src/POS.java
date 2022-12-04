@@ -9,4 +9,8 @@ public class POS {
 
     private String pos;
 
+    @Override
+    public String toString() {
+        return pos;
+    }
 }

@@ -33,6 +33,17 @@ public class ParserTreeNode {
         return children != null;
     }
 
+    @Override
+    public String toString() {
+        if(word !=null){
+            return ""+ word;
+        }else
+        return
+                 pos +
+                "" + children
+                ;
+    }
+
 
 //    public boolean addChild(Word n) {
 //        return childrenList.add(n);
