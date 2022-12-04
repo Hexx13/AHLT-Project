@@ -15,21 +15,6 @@ public class Parser {
 
     //private List<Word> inputWords;
 
-    void populatePOS() {
-        try {
-            // Buffered reader, reads file, tokenizes it, and adds it to the list
-            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
-            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
-            while (st.hasMoreTokens()) {
-                partsOfSpeech.add(new POS(st.nextToken()));
-            }
-
-        } catch (IOException e){
-            System.out.println("Error: " + e);
-        }
-    }
-
-
     /**
      * Constructor assigns objects for lexicon, rules and populates them
      * @throws IOException due to use of BufferedReader and FileReader
@@ -45,6 +30,19 @@ public class Parser {
         populateRule();
         populateLexicon();
 
+    }
+    void populatePOS() {
+        try {
+            // Buffered reader, reads file, tokenizes it, and adds it to the list
+            BufferedReader bf = new BufferedReader(new FileReader("src/POS.txt"));
+            StringTokenizer st = new StringTokenizer(bf.readLine(), ",");
+            while (st.hasMoreTokens()) {
+                partsOfSpeech.add(new POS(st.nextToken()));
+            }
+
+        } catch (IOException e){
+            System.out.println("Error: " + e);
+        }
     }
 
     /**
@@ -106,6 +104,8 @@ public class Parser {
             rules.add(rule);
         }
     }
+
+    //takes in the input and adds stuff to "tree"
     void parse(String input) {
         List<Word> parsedInput = parseInput(input);
         List<List<ParserTreeNode>> tree = new ArrayList<List<ParserTreeNode>>();
@@ -124,29 +124,9 @@ public class Parser {
         tree.add(determineRule(tree.get(1)));
 
         tree.add(determineRule(tree.get(2)));
-//        int i = 0;
-//        while (true){
-//            System.out.println(tree.get(tree.size()-1).size());
-//            for(ParserTreeNode node : tree.get(i)){
-//                System.out.println(node.getTag());
-//            }
-//            if(tree.get(tree.size()-1).size() <= 1){
-//                break;
-//            }
-//            tree.add(determineRule(tree.get(i)));
-//
-//            i++;
-//        }
-//        for(List<ParserTreeNode> list : tree){
-//            System.out.println(tree.size());
-//            if(tree.size() <= 1){
-//                break;
-//            }
-//            tree.add(determineRule(list));
-//
-//        }
     }
 
+    //clean input and assigns POS to words
     List<Word> parseInput(String sentence) {
         List<Word> inputWords = new ArrayList<Word>();
         //clean sentence of any other possible characters apart from letters and spaces
@@ -170,6 +150,7 @@ public class Parser {
         return inputWords;
     }
 
+    //reccursive search for rules for an inputted list
     List<ParserTreeNode> determineRule(List<ParserTreeNode> children) {
 
         //when a rule is found assign leafs to the rule node
@@ -183,7 +164,6 @@ public class Parser {
             list.add(new POS(children.get(i).getTag()));
 
             //Debug statements
-
             rule = compareRule(list);
 
             System.out.println("New itteration");
@@ -192,7 +172,6 @@ public class Parser {
                 System.out.println(" Rule:  "+ w.getPosString());
             }
             if(rule != null){
-
                 System.out.println("Found rule: "+rule.getRule());
                 System.out.println();
                 list.clear();
@@ -284,9 +263,7 @@ public class Parser {
         else return null;
     }
 
-    public List<POS> getPartsOfSpeech() {
-        return partsOfSpeech;
-    }
+
 //            for (Rule rule: rules) {
 //                if(list.size() == rule.getPosList().size()){
 //                    for (int j = 0; j < list.size(); j++) {
