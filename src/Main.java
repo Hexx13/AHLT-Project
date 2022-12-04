@@ -13,10 +13,6 @@ public class Main {
         if(!result) System.out.println("Invalid grammar or unknown word");
         //new ParserGUI("ParserGui");
 
-//        ParserTree tree = new ParserTree();
-//        tree.addChild( new Word("A", "1", new POS("DT")));
-//        tree.addChild( new Word("green", "1", new POS("JJ")));
-//
-//        System.out.println(((Word)(tree.getChild(1))).getWord());
+
     }
 }
